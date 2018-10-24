@@ -21,7 +21,7 @@ namespace OpenStack\Tests\ObjectStore\v1\Resource;
 
 use OpenStack\Bootstrap;
 use \OpenStack\ObjectStore\v1\Resource\Container;
-use \OpenStack\ObjectStore\v1\Resource\Object;
+use \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject;
 use \OpenStack\ObjectStore\v1\Resource\ACL;
 use OpenStack\Tests\TestCase;
 
@@ -64,7 +64,7 @@ class ContainerTest extends TestCase
 
         $container = $this->containerFixture();
 
-        $object = new Object(self::FNAME, self::FCONTENT, self::FTYPE);
+        $object = new ObjectStoreObject(self::FNAME, self::FCONTENT, self::FTYPE);
         $object->setMetadata(['foo' => '1234']);
 
         $this->assertEquals(self::FCONTENT, $object->content());
@@ -181,8 +181,8 @@ class ContainerTest extends TestCase
     public function testObjects()
     {
         $container = $this->containerFixture();
-        $obj1 = new Object('a/' . self::FNAME, self::FCONTENT, self::FTYPE);
-        $obj2 = new Object('a/b/' . self::FNAME, self::FCONTENT, self::FTYPE);
+        $obj1 = new ObjectStoreObject('a/' . self::FNAME, self::FCONTENT, self::FTYPE);
+        $obj2 = new ObjectStoreObject('a/b/' . self::FNAME, self::FCONTENT, self::FTYPE);
 
         $container->save($obj1);
         $container->save($obj2);
@@ -225,7 +225,7 @@ class ContainerTest extends TestCase
         $this->assertEquals(2, count($objects));
 
         foreach ($objects as $o) {
-            if ($o instanceof Object) {
+            if ($o instanceof ObjectStoreObject) {
                 $this->assertEquals('a/' . self::FNAME, $o->name());
             } else {
                 $this->assertEquals('a/b/', $o->path());
@@ -240,7 +240,7 @@ class ContainerTest extends TestCase
         $this->assertEquals(2, count($objects));
 
         foreach ($objects as $o) {
-            $this->assertInstanceOf('\OpenStack\ObjectStore\v1\Resource\Object', $o);
+            $this->assertInstanceOf('\OpenStack\ObjectStore\v1\Resource\ObjectStoreObject', $o);
         }
 
         // This should give us one file and one subdir.
@@ -248,7 +248,7 @@ class ContainerTest extends TestCase
         $this->assertEquals(2, count($objects));
 
         foreach ($objects as $o) {
-            if ($o instanceof Object) {
+            if ($o instanceof ObjectStoreObject) {
                 $this->assertEquals(self::FNAME, $o->name());
             } else {
                 $this->assertEquals('a/', $o->path());

@@ -41,11 +41,11 @@ namespace OpenStack\ObjectStore\v1\Resource;
  * Objects are stored and retrieved by name. So it is assumed
  * that, per container, no more than one file with a given name exists.
  *
- * You may create Object instance and then store them in Containers.
- * Likewise, a Container instance can retrieve Object instances from the
+ * You may create ObjectStoreObject instance and then store them in Containers.
+ * Likewise, a Container instance can retrieve ObjectStoreObject instances from the
  * remote object store.
  */
-class Object
+class ObjectStoreObject
 {
     const DEFAULT_CONTENT_TYPE = 'application/octet-stream';
 
@@ -139,7 +139,7 @@ class Object
      *
      * @param array $array An associative array of metadata names to values.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\Object $this so the method can be
+     * @return \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject $this so the method can be
      *                                                   used in chaining.
      */
     public function setMetadata(array $array)
@@ -174,7 +174,7 @@ class Object
      *
      * @param string $name A file or object name.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\Object $this so the method can be
+     * @return \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject $this so the method can be
      *                                                   used in chaining.
      */
     public function setName($name)
@@ -200,7 +200,7 @@ class Object
     /**
      * Set the content type (MIME type) for the object.
      *
-     * Object storage is, to a certain degree, content-type aware. For
+     * ObjectStoreObject storage is, to a certain degree, content-type aware. For
      * that reason, a content type is mandatory.
      *
      * The default MIME type used is `application/octet-stream`, which is
@@ -211,7 +211,7 @@ class Object
      * charset to a text type:
      *
      *     <?php
-     *     $o = new Object('my.html');
+     *     $o = new ObjectStoreObject('my.html');
      *     $o->setContentType('text/html; charset=iso-8859-13');
      *     ?>
      *
@@ -221,7 +221,7 @@ class Object
      *
      * @param string $type A valid content type.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\Object $this so the method can be
+     * @return \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject $this so the method can be
      *                                                   used in chaining.
      */
     public function setContentType($type)
@@ -262,7 +262,7 @@ class Object
      * @param string $type    The content type (MIME type). This can be set here for
      *                        convenience, or you can call setContentType() directly.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\Object $this so the method can be
+     * @return \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject $this so the method can be
      *                                                   used in chaining.
      */
     public function setContent($content, $type = null)
@@ -353,7 +353,7 @@ class Object
      *
      * @param string $encoding A valid encoding type.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\Object $this so the method can be
+     * @return \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject $this so the method can be
      *                                                   used in chaining.
      */
     public function setEncoding($encoding)
@@ -395,7 +395,7 @@ class Object
      * @param string $disposition A valid disposition declaration. These are
      *                            defined in various HTTP specifications.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\Object $this so the method can be
+     * @return \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject $this so the method can be
      *                                                   used in chaining.
      */
     public function setDisposition($disposition)
@@ -440,7 +440,7 @@ class Object
      *   these headers will be accessible.
      * - Swift only stores certain headers. If you supply an unrecognized
      *   header to Swift, it may simply ignore it.
-     * - The RemoteObject::headers() method provides access to all of the
+     * - The RemoteObjectStoreObject::headers() method provides access to all of the
      *   headers returned from Swift.
      * - Headers are merged in as they are, with no cleaning, encoding, or
      *   checking. You must ensure that the headers are in the proper
@@ -450,7 +450,7 @@ class Object
      *                       header name, and each value is the HTTP header value. No encoding or
      *                       escaping is done.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\Object $this so the method can be
+     * @return \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject $this so the method can be
      *                                                   used in chaining.
      */
     public function setAdditionalHeaders($headers)
@@ -476,8 +476,8 @@ class Object
      *
      * This takes an array of header names, and removes
      * any matching headers. Typically, only headers set
-     * by setAdditionalHeaders() are removed from an Object.
-     * (RemoteObject works differently).
+     * by setAdditionalHeaders() are removed from an ObjectStoreObject.
+     * (RemoteObjectStoreObject works differently).
      *
      * Many headers are generated automatically, such as
      * Content-Type and Content-Length. Removing these
@@ -485,7 +485,7 @@ class Object
      *
      * @param array $keys The header names to be removed.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\Object $this for the current
+     * @return \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject $this for the current
      *                                                   object so it can be used in chaining methods.
      */
     public function removeHeaders($keys)
@@ -517,7 +517,7 @@ class Object
      */
     public function isChunked()
     {
-        // Currently, this value is hard-coded. The default Object
+        // Currently, this value is hard-coded. The default ObjectStoreObject
         // implementation does not get chunked.
         return false;
     }

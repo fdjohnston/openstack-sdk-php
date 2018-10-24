@@ -133,7 +133,7 @@
  *  - \OpenStack\Identity\v1\IdentityService::serviceCatalog() tells you about
  *    the services you have activated on this account.
  *
- * Basic Example: Object Storage
+ * Basic Example: ObjectStoreObject Storage
  *
  * Assuming you have an object storage instance available in your service
  * catalog, we could continue on with something like this:
@@ -176,8 +176,8 @@
  *- \OpenStack\ObjectStore\v1\ObjectStorage is where you will start.
  *- Container services are in \OpenStack\ObjectStore\v1\ObjectStorage\Container
  *- There are two classes for objects:
- *     - \OpenStack\ObjectStore\v1\ObjectStorage\Object is for creating new objects.
- *     - \OpenStack\ObjectStore\v1\ObjectStorage\RemoteObject provides better network
+ *     - \OpenStack\ObjectStore\v1\ObjectStorage\ObjectStoreObject is for creating new objects.
+ *     - \OpenStack\ObjectStore\v1\ObjectStorage\RemoteObjectStoreObject provides better network
  *     performance when reading objects.
  *
  */

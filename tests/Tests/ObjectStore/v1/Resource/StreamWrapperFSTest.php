@@ -125,7 +125,7 @@ class StreamWrapperFSTest extends StreamWrapperTestCase
     public function testStreamGetMetadata()
     {
         $object = stream_get_meta_data($this->resource)['wrapper_data']->object();
-        $this->assertInstanceOf('OpenStack\ObjectStore\v1\Resource\Object', $object);
+        $this->assertInstanceOf('OpenStack\ObjectStore\v1\Resource\ObjectStoreObject', $object);
         $this->assertEquals(self::FTYPE, $object->contentType());
     }
 
@@ -318,7 +318,7 @@ class StreamWrapperFSTest extends StreamWrapperTestCase
 
     public function testIsDir()
     {
-        // Object names are pathy. If objects exist starting with this path we can
+        // ObjectStoreObject names are pathy. If objects exist starting with this path we can
         // consider the directory to exist.
         $url = $this->createNewUrl('baz/');
         $this->assertFalse(is_dir($url));
@@ -329,7 +329,7 @@ class StreamWrapperFSTest extends StreamWrapperTestCase
 
     public function testMkdir()
     {
-        // Object names are pathy. If no object names start with the a path we can
+        // ObjectStoreObject names are pathy. If no object names start with the a path we can
         // consider mkdir passed. If object names exist we should fail mkdir.
         $url = $this->createNewUrl('baz/');
         $this->assertTrue(mkdir($url, 0700, true, $this->context));
@@ -341,7 +341,7 @@ class StreamWrapperFSTest extends StreamWrapperTestCase
 
     public function testRmdir()
     {
-        // Object names are pathy. If no object names start with the a path we can
+        // ObjectStoreObject names are pathy. If no object names start with the a path we can
         // consider rmdir passed. If object names exist we should fail rmdir.
         $url = $this->createNewUrl('baz/');
         $this->assertTrue(rmdir($url, $this->context));

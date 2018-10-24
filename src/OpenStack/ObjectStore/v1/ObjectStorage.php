@@ -31,8 +31,8 @@ use OpenStack\ObjectStore\v1\Resource\ACL;
 /**
  * Access to ObjectStorage (Swift).
  *
- * This is the primary piece of the Object Oriented representation of
- * the Object Storage service. Developers wishing to work at a low level
+ * This is the primary piece of the ObjectStoreObject Oriented representation of
+ * the ObjectStoreObject Storage service. Developers wishing to work at a low level
  * should use this API.
  *
  * There is also a stream wrapper interface that exposes ObjectStorage
@@ -85,7 +85,7 @@ class ObjectStorage
      *
      * @param \OpenStack\Identity\v2\IdentityService $identity An identity services object that already
      *                                                         has a valid token and a service catalog.
-     * @param string $region The Object Storage region
+     * @param string $region The ObjectStoreObject Storage region
      * @param \OpenStack\Common\Transport\ClientInterface $client The HTTP client
      *
      * @return \OpenStack\ObjectStore\v1\ObjectStorage A new ObjectStorage instance.
@@ -112,7 +112,7 @@ class ObjectStorage
      *                          This can be either the entire catalog or a catalog
      *                          filtered to just ObjectStorage::SERVICE_TYPE.
      * @param string $authToken The auth token returned by IdentityService.
-     * @param string $region    The Object Storage region
+     * @param string $region    The ObjectStoreObject Storage region
      * @param \OpenStack\Common\Transport\ClientInterface $client The HTTP client
      *
      *
@@ -468,7 +468,7 @@ class ObjectStorage
      *
      * This returns information about:
      *
-     * - The total bytes used by this Object Storage instance (`bytes`).
+     * - The total bytes used by this ObjectStoreObject Storage instance (`bytes`).
      * - The number of containers (`count`).
      *
      * @return array An associative array of account info. Typical keys are:

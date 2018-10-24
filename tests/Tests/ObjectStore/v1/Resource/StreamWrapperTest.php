@@ -121,7 +121,7 @@ class StreamWrapperTest extends StreamWrapperTestCase
     public function testStreamGetMetadata()
     {
         $object = stream_get_meta_data($this->resource)['wrapper_data']->object();
-        $this->assertInstanceOf('OpenStack\ObjectStore\v1\Resource\Object', $object);
+        $this->assertInstanceOf('OpenStack\ObjectStore\v1\Resource\ObjectStoreObject', $object);
         $this->assertEquals(self::FTYPE, $object->contentType());
     }
 

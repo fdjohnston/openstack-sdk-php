@@ -73,7 +73,7 @@ use OpenStack\ObjectStore\v1\Resource\StreamWrapperFS;
  * Stream wrappers allow you to use the built-in file manipulation
  * functions in PHP to interact with other services. Specifically,
  * the OpenStack stream wrappers allow you to use built-in file commands
- * to access Object Storage (Swift) and other OpenStack services using
+ * to access ObjectStoreObject Storage (Swift) and other OpenStack services using
  * commands like file_get_contents() and fopen().
  *
  * It's awesome. Trust me.

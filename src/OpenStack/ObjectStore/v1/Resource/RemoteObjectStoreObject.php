@@ -24,11 +24,11 @@ use OpenStack\Common\Transport\Guzzle\GuzzleAdapter;
 use OpenStack\ObjectStore\v1\Exception;
 
 /**
- * A representation of an object stored in remote Object Storage.
+ * A representation of an object stored in remote ObjectStoreObject Storage.
  *
  * A remote object is one whose canonical copy is stored in a remote
  * object storage. It represents a local (and possibly partial) copy of
- * an object. (Contrast this with \OpenStack\ObjectStore\v1\Resource\Object)
+ * an object. (Contrast this with \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject)
  *
  * Depending on how the object was constructed, it may or may not have a
  * local copy of the entire contents of the file. It may only have the
@@ -43,7 +43,7 @@ use OpenStack\ObjectStore\v1\Exception;
  * object is modified so that its local contents differ from the remote
  * stored copy, it is marked dirty (see isDirty()).
  */
-class RemoteObject extends Object
+class RemoteObjectStoreObject extends ObjectStoreObject
 {
     protected $contentLength = 0;
     protected $etag = '';
@@ -69,7 +69,7 @@ class RemoteObject extends Object
     protected $client;
 
     /**
-     * Create a new RemoteObject from JSON data.
+     * Create a new RemoteObjectStoreObject from JSON data.
      *
      * @param array  $data  The JSON data as an array.
      * @param string $token The authentication token.
@@ -78,7 +78,7 @@ class RemoteObject extends Object
      */
     public static function newFromJSON($data, $token, $url, ClientInterface $client = null)
     {
-        $object = new RemoteObject($data['name']);
+        $object = new RemoteObjectStoreObject($data['name']);
         $object->setContentType($data['content_type']);
 
         $object->contentLength = (int) $data['bytes'];
@@ -100,7 +100,7 @@ class RemoteObject extends Object
     }
 
     /**
-     * Create a new RemoteObject from HTTP headers.
+     * Create a new RemoteObjectStoreObject from HTTP headers.
      *
      * This is used to create objects from GET and HEAD requests, which
      * return all of the metadata inside of the headers.
@@ -113,11 +113,11 @@ class RemoteObject extends Object
      * @param string $url     The URL to the object in the object storage. Used for
      *                        issuing subsequent requests.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObject A new RemoteObject.
+     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObjectStoreObject A new RemoteObjectStoreObject.
      */
     public static function newFromHeaders($name, $headers, $token, $url, ClientInterface $client = null)
     {
-        $object = new RemoteObject($name);
+        $object = new RemoteObjectStoreObject($name);
 
         //$object->allHeaders = $headers;
         $object->setHeaders($headers);
@@ -226,7 +226,7 @@ class RemoteObject extends Object
     /**
      * Set the headers
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObject $this for the current object so it can be used in chaining
+     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObjectStoreObject $this for the current object so it can be used in chaining
      *                                                       methods.
      */
     public function setHeaders($headers)
@@ -283,7 +283,7 @@ class RemoteObject extends Object
     /**
      * Filter the headers.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObject $this for the current object so it can be used in chaining
+     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObjectStoreObject $this for the current object so it can be used in chaining
      *                                                       methods.
      */
     public function filterHeaders(&$headers)
@@ -318,7 +318,7 @@ class RemoteObject extends Object
      *
      * @param array $keys The header names to be removed.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObject $this for the current object so it can be used in chaining
+     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObjectStoreObject $this for the current object so it can be used in chaining
      *                                                       methods.
      */
     public function removeHeaders($keys)
@@ -453,7 +453,7 @@ class RemoteObject extends Object
     /**
      * Enable or disable content caching.
      *
-     * If a RemoteObject is set to cache then the first time content() is
+     * If a RemoteObjectStoreObject is set to cache then the first time content() is
      * called, its results will be cached locally. This is very useful for
      * small files whose content is accessed repeatedly, but can be a
      * cause of memory consumption for larger files.
@@ -467,7 +467,7 @@ class RemoteObject extends Object
      * @param boolean $enabled If this is true, caching will be enabled. If this
      *                         is false, caching will be disabled.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObject $this so the method can be used in chaining.
+     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObjectStoreObject $this so the method can be used in chaining.
      */
     public function setCaching($enabled)
     {
@@ -492,7 +492,7 @@ class RemoteObject extends Object
     /**
      * Enable or disable content verification (checksum/md5).
      *
-     * The default behavior of a RemoteObject is to verify that the MD5
+     * The default behavior of a RemoteObjectStoreObject is to verify that the MD5
      * provided by the server matches the locally generated MD5 of the
      * file contents.
      *
@@ -512,7 +512,7 @@ class RemoteObject extends Object
      *                         server-supplied MD5 hashcode. If this is false,
      *                         no checking is done.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObject $this so the method can be used in chaining.
+     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObjectStoreObject $this so the method can be used in chaining.
      */
     public function setContentVerification($enabled)
     {
@@ -524,7 +524,7 @@ class RemoteObject extends Object
     /**
      * Indicate whether this object verifies content (checksum).
      *
-     * When content verification is on, RemoteObject attemts to perform a
+     * When content verification is on, RemoteObjectStoreObject attemts to perform a
      * checksum on the object, calculating the MD5 hash of the content
      * returned by the remote server, and comparing that to the server's
      * supplied ETag hash.
@@ -552,7 +552,7 @@ class RemoteObject extends Object
      * change the checksum value, and thus (correctly) mark the object as
      * dirty.
      *
-     * The RemoteObject implementation does not internally check dirty
+     * The RemoteObjectStoreObject implementation does not internally check dirty
      * markers. It is left to implementors to ensure that dirty content is
      * written to the remote server when desired.
      *
@@ -589,7 +589,7 @@ class RemoteObject extends Object
      * @param boolean $fetchContent If this is true, the content will be
      *                              downloaded as well.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObject $this for the current object so it
+     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObjectStoreObject $this for the current object so it
      *                                                         can be used in chaining methods.
      */
     public function refresh($fetchContent = false)
@@ -644,7 +644,7 @@ class RemoteObject extends Object
      *
      * This is used internally to set object properties from headers.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObject $this for the current object so it
+     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObjectStoreObject $this for the current object so it
      *                                                         can be used in chaining methods.
      */
     protected function extractFromHeaders($response)

@@ -19,7 +19,7 @@
 
 namespace OpenStack\Tests\ObjectStore\v1\Resource;
 
-use \OpenStack\ObjectStore\v1\Resource\Object;
+use \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject;
 
 class ObjectTest extends \OpenStack\Tests\TestCase
 {
@@ -30,14 +30,14 @@ class ObjectTest extends \OpenStack\Tests\TestCase
     /**
      * Set up a basic object fixture.
      *
-     * This provides an Object initialized with the main constants defined
+     * This provides an ObjectStoreObject initialized with the main constants defined
      * for this class. Use this as a fixture to avoid repetition.
      *
-     * @return Object An initialized object.
+     * @return ObjectStoreObject An initialized object.
      */
     public function basicObjectFixture()
     {
-        $o = new Object(self::FNAME);
+        $o = new ObjectStoreObject(self::FNAME);
         $o->setContent(self::FCONTENT, self::FTYPE);
 
         return $o;
@@ -49,7 +49,7 @@ class ObjectTest extends \OpenStack\Tests\TestCase
 
         $this->assertEquals(self::FNAME, $o->name());
 
-        $o = new Object('a', 'b', 'text/plain');
+        $o = new ObjectStoreObject('a', 'b', 'text/plain');
 
         $this->assertEquals('a', $o->name());
         $this->assertEquals('b', $o->content());
@@ -60,7 +60,7 @@ class ObjectTest extends \OpenStack\Tests\TestCase
     {
         // Don't use the fixture, we want to test content
         // type in its raw state.
-        $o = new Object('foo.txt');
+        $o = new ObjectStoreObject('foo.txt');
 
         $this->assertEquals('application/octet-stream', $o->contentType());
 

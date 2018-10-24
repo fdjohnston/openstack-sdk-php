@@ -452,7 +452,7 @@ class IdentityService
      * entire service catalog is returned.
      *
      * The service catalog contains information about what services (if any) are
-     * available for the present user. Object storage (Swift) Compute instances
+     * available for the present user. ObjectStoreObject storage (Swift) Compute instances
      * (Nova) and other services will each be listed here if they are enabled
      * for your user in the current tenant. Only services that have been turned on
      * for the user on the tenant will be available. (That is, even if you *can*
@@ -468,7 +468,7 @@ class IdentityService
      *     <?php
      *     array(
      *       array(
-     *         'name' : 'Object Storage',
+     *         'name' : 'ObjectStoreObject Storage',
      *         'type' => 'object-store',
      *         'endpoints' => array(
      *           'tenantId' => '123456',
@@ -501,7 +501,7 @@ class IdentityService
      *
      * - identity: Identity Services (i.e. Keystone)
      * - compute: Compute instance (Nova)
-     * - object-store: Object Storage (Swift)
+     * - object-store: ObjectStoreObject Storage (Swift)
      *
      * Other services will be added.
      *

@@ -118,7 +118,7 @@ abstract class StreamWrapperTestCase extends TestCase
         }
 
         if (!($objectStore = $this->objectStore())) {
-            throw new \Exception('Object storage service could not be created');
+            throw new \Exception('ObjectStoreObject storage service could not be created');
         }
 
         $params += [

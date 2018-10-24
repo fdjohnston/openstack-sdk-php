@@ -64,7 +64,7 @@ use OpenStack\Common\Exception;
  * Locking
  *
  * This library does not support locking (e.g. flock()). This is because the
- * OpenStack Object Storage implementation does not support locking. But there
+ * OpenStack ObjectStoreObject Storage implementation does not support locking. But there
  * are a few related things you should keep in mind:
  *
  * - Working with a stream is essentially working with a COPY OF a remote file.
@@ -81,11 +81,11 @@ use OpenStack\Common\Exception;
  * the OpenStack API). Consequently, almost all actions done through the
  * stream wrapper are focused on objects, not containers, servers, etc.
  *
- * Retrieving an Existing Object
+ * Retrieving an Existing ObjectStoreObject
  *
  * Retrieving an object is done by opening a file handle to that object.
  *
- * Writing an Object
+ * Writing an ObjectStoreObject
  *
  * Nothing is written to the remote storage until the file is closed. This
  * keeps network traffic at a minimum, and respects the more-or-less stateless
@@ -292,7 +292,7 @@ class StreamWrapper
     protected $isDirty = false;
 
     /**
-     * Object storage instance.
+     * ObjectStoreObject storage instance.
      */
     protected $store;
 
@@ -302,12 +302,12 @@ class StreamWrapper
     protected $container;
 
     /**
-     * The Object.
+     * The ObjectStoreObject.
      */
     protected $obj;
 
     /**
-     * The IO stream for the Object.
+     * The IO stream for the ObjectStoreObject.
      */
     protected $objStream;
 
@@ -784,7 +784,7 @@ class StreamWrapper
         // until we issue our first request.
         $containerName = $url['host'];
 
-        // Object name.
+        // ObjectStoreObject name.
         $objectName = $url['path'];
 
         // XXX: We reserve the query string for passing additional params.
@@ -855,7 +855,7 @@ class StreamWrapper
 
             // For many modes, we just go ahead and create.
             if ($this->createIfNotFound) {
-                $this->obj = new Object($objectName);
+                $this->obj = new ObjectStoreObject($objectName);
                 $this->objStream = fopen('php://temp', 'rb+');
 
                 $this->isDirty = true;
@@ -1113,17 +1113,17 @@ class StreamWrapper
     }
 
     /**
-     * Get the Object.
+     * Get the ObjectStoreObject.
      *
      * This provides low-level access to the
-     * \OpenStack\ObjectStore\v1\ObjectStorage::Object instance in which the content
+     * \OpenStack\ObjectStore\v1\ObjectStorage::ObjectStoreObject instance in which the content
      * is stored.
      *
-     * Accessing the object's payload (Object::content()) is strongly
+     * Accessing the object's payload (ObjectStoreObject::content()) is strongly
      * discouraged, as it will modify the pointers in the stream that the
      * stream wrapper is using.
      *
-     * HOWEVER, accessing the Object's metadata properties, content type,
+     * HOWEVER, accessing the ObjectStoreObject's metadata properties, content type,
      * and so on is okay. Changes to this data will be written on the next
      * flush, provided that the file stream data has also been changed.
      *
@@ -1143,7 +1143,7 @@ class StreamWrapper
     /**
      * EXPERT: Get the ObjectStorage for this wrapper.
      *
-     * @return object \OpenStack\ObjectStorage An ObjectStorage object.
+     * @return ObjectStoreObject \OpenStack\ObjectStorage An ObjectStorage object.
      *                @see object()
      */
     public function objectStorage()
@@ -1219,7 +1219,7 @@ class StreamWrapper
             $gid = 0;
         }
 
-        if ($object instanceof \OpenStack\ObjectStore\v1\Resource\RemoteObject) {
+        if ($object instanceof \OpenStack\ObjectStore\v1\Resource\RemoteObjectStoreObject) {
             $modTime = $object->lastModified();
         } else {
             $modTime = 0;

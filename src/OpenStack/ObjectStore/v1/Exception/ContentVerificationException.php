@@ -23,6 +23,6 @@ namespace OpenStack\ObjectStore\v1\Exception;
  *
  * This occurs when the server sends content whose value does
  * not match the supplied checksum. See
- * RemoteObject::setContentVerification().
+ * RemoteObjectStoreObject::setContentVerification().
  */
 class ContentVerificationException extends \OpenStack\Common\Exception {}

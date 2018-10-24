@@ -27,7 +27,7 @@ use OpenStack\Common\Transport\Guzzle\GuzzleAdapter;
 /**
  * A container in an ObjectStorage.
  *
- * An Object Storage instance is divided into containers, where each
+ * An ObjectStoreObject Storage instance is divided into containers, where each
  * container can hold an arbitrary number of objects. This class
  * describes a container, providing access to its properties and to the
  * objects stored inside of it.
@@ -42,7 +42,7 @@ use OpenStack\Common\Transport\Guzzle\GuzzleAdapter;
  *     <?php
  *     use \OpenStack\ObjectStore\v1\ObjectStorage;
  *     use \OpenStack\ObjectStore\v1\Resource\Container;
- *     use \OpenStack\ObjectStore\v1\Resource\Object;
+ *     use \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject;
  *
  *     // Create a new ObjectStorage instance
  *     // For more examples on authenticating and creating an ObjectStorage
@@ -55,7 +55,7 @@ use OpenStack\Common\Transport\Guzzle\GuzzleAdapter;
  *     $container = $store->container('foo');
  *
  *     // Create an object.
- *     $obj = new Object('bar.txt');
+ *     $obj = new ObjectStoreObject('bar.txt');
  *     $obj->setContent('Example content.', 'text/plain');
  *
  *     // Save the new object in the container.
@@ -73,7 +73,7 @@ class Container implements \Countable, \IteratorAggregate
     /**
      * The prefix for any piece of metadata passed in HTTP headers.
      */
-    const METADATA_HEADER_PREFIX = 'X-Object-Meta-';
+    const METADATA_HEADER_PREFIX = 'X-ObjectStoreObject-Meta-';
     const CONTAINER_METADATA_HEADER_PREFIX = 'X-Container-Meta-';
 
     //protected $properties = array();
@@ -241,12 +241,12 @@ class Container implements \Countable, \IteratorAggregate
      * cases, the standard constructor is preferred for client-size
      * Container initialization.
      *
-     * @param string $name     The name of the container.
-     * @param object $response \OpenStack\Common\Transport\Response The HTTP response object from the Transporter layer
-     * @param string $token    The auth token.
-     * @param string $url      The base URL. The container name is automatically
+     * @param string                                      $name     The name of the container.
+     * @param ObjectStoreObject                           $response \OpenStack\Common\Transport\Response The HTTP response object from the Transporter layer
+     * @param string                                      $token    The auth token.
+     * @param string                                      $url      The base URL. The container name is automatically
      *                         appended to this at construction time.
-     * @param \OpenStack\Common\Transport\ClientInterface $client A HTTP transport client.
+     * @param \OpenStack\Common\Transport\ClientInterface $client   A HTTP transport client.
      *
      * @return \OpenStack\ObjectStore\v1\Resource\Container The Container object, initialized and ready for use.
      */
@@ -254,7 +254,7 @@ class Container implements \Countable, \IteratorAggregate
     {
         $container = new Container($name, null, null, $client);
         $container->bytes = $response->getHeader('X-Container-Bytes-Used', 0);
-        $container->count = $response->getHeader('X-Container-Object-Count', 0);
+        $container->count = $response->getHeader('X-Container-ObjectStoreObject-Count', 0);
         $container->baseUrl = $url;
         $container->url = $url . '/' . rawurlencode($name);
         $container->token = $token;
@@ -426,15 +426,15 @@ class Container implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Save an Object into Object Storage.
+     * Save an ObjectStoreObject into ObjectStoreObject Storage.
      *
-     * This takes an \OpenStack\ObjectStore\v1\Resource\Object
+     * This takes an \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject
      * and stores it in the given container in the present
      * container on the remote object store.
      *
-     * @param object   $obj  \OpenStack\ObjectStore\v1\Resource\Object The object to
+     * @param ObjectStoreObject $obj  \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject The object to
      *                       store.
-     * @param resource $file An optional file argument that, if set, will be
+     * @param resource          $file An optional file argument that, if set, will be
      *                       treated as the contents of the object.
      *
      * @return boolean true if the object was saved.
@@ -451,7 +451,7 @@ class Container implements \Countable, \IteratorAggregate
      * @throws \OpenStack\Common\Exception                                        when an unexpected (usually
      *                                                                            network-related) error condition arises.
      */
-    public function save(Object $obj, $file = null)
+    public function save(ObjectStoreObject $obj, $file = null)
     {
         if (empty($this->token)) {
             throw new Exception('Container does not have an auth token.');
@@ -548,14 +548,14 @@ class Container implements \Countable, \IteratorAggregate
      * particularly in cases where custom headers have been set.
      * Use with caution.
      *
-     * @param object $obj \OpenStack\ObjectStore\v1\Resource\Object The object to update.
+     * @param ObjectStoreObject $obj \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject The object to update.
      *
      * @return boolean true if the metadata was updated.
      *
      * @throws \OpenStack\Common\Transport\Exception\ResourceNotFoundException if the object does not already
      *                                                           exist on the object storage.
      */
-    public function updateMetadata(Object $obj)
+    public function updateMetadata(ObjectStoreObject $obj)
     {
         $url = self::objectUrl($this->url, $obj->name());
         $headers = ['X-Auth-Token' => $this->token];
@@ -596,18 +596,18 @@ class Container implements \Countable, \IteratorAggregate
      * Note that there is no MOVE operation. You must copy and then DELETE
      * in order to achieve that.
      *
-     * @param object $obj       \OpenStack\ObjectStore\v1\Resource\Object The object to
+     * @param ObjectStoreObject $obj       \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject The object to
      *                          copy. This object MUST already be saved on the remote server. The body of
      *                          the object is not sent. Instead, the copy operation is performed on the
-     *                          remote server. You can, and probably should, use a RemoteObject here.
-     * @param string $newName   The new name of this object. If you are copying a
+     *                          remote server. You can, and probably should, use a RemoteObjectStoreObject here.
+     * @param string            $newName   The new name of this object. If you are copying a
      *                          cross containers, the name can be the same. If you are copying within
      *                          the same container, though, you will need to supply a new name.
-     * @param string $container The name of the alternate container. If this is
+     * @param string            $container The name of the alternate container. If this is
      *                          set, the object will be saved into this container. If this is not sent,
      *                          the copy will be performed inside of the original container.
      */
-    public function copy(Object $obj, $newName, $container = null)
+    public function copy(ObjectStoreObject $obj, $newName, $container = null)
     {
         $sourceUrl = self::objectUrl($this->url, $obj->name());
 
@@ -650,7 +650,7 @@ class Container implements \Countable, \IteratorAggregate
      *
      * For larger files or files whose content may never be accessed, use
      * proxyObject(), which delays loading the content until one of its
-     * content methods (e.g. RemoteObject::content()) is called.
+     * content methods (e.g. RemoteObjectStoreObject::content()) is called.
      *
      * This does not yet support the following features of Swift:
      *
@@ -660,7 +660,7 @@ class Container implements \Countable, \IteratorAggregate
      *
      * @param string $name The name of the object to load.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObject A remote object with the content already stored locally.
+     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObjectStoreObject A remote object with the content already stored locally.
      */
     public function object($name)
     {
@@ -673,7 +673,7 @@ class Container implements \Countable, \IteratorAggregate
             throw new Exception('An unknown error occurred while saving: ' . $response->status());
         }
 
-        $remoteObject = RemoteObject::newFromHeaders($name, self::reformatHeaders($response->getHeaders()), $this->token, $url, $this->client);
+        $remoteObject = RemoteObjectStoreObject::newFromHeaders($name, self::reformatHeaders($response->getHeaders()), $this->token, $url, $this->client);
         $remoteObject->setContent($response->getBody());
 
         return $remoteObject;
@@ -686,7 +686,7 @@ class Container implements \Countable, \IteratorAggregate
      * its contents. Size, hash, metadata, and modification date
      * information are all retrieved and wrapped.
      *
-     * The data comes back as a RemoteObject, which can be used to
+     * The data comes back as a RemoteObjectStoreObject, which can be used to
      * transparently fetch the object's content, too.
      *
      * Why Use This?
@@ -698,14 +698,14 @@ class Container implements \Countable, \IteratorAggregate
      * This method can fetch the relevant metadata, but delay fetching
      * the content until it is actually needed.
      *
-     * Since RemoteObject extends Object, all of the calls that can be
-     * made to an Object can also be made to a RemoteObject. Be aware,
-     * though, that calling RemoteObject::content() will initiate another
+     * Since RemoteObjectStoreObject extends ObjectStoreObject, all of the calls that can be
+     * made to an ObjectStoreObject can also be made to a RemoteObjectStoreObject. Be aware,
+     * though, that calling RemoteObjectStoreObject::content() will initiate another
      * network operation.
      *
      * @param string $name The name of the object to fetch.
      *
-     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObject A remote object ready for use.
+     * @return \OpenStack\ObjectStore\v1\Resource\RemoteObjectStoreObject A remote object ready for use.
      */
     public function proxyObject($name)
     {
@@ -720,7 +720,7 @@ class Container implements \Countable, \IteratorAggregate
 
         $headers = self::reformatHeaders($response->getHeaders());
 
-        return RemoteObject::newFromHeaders($name, $headers, $this->token, $url, $this->client);
+        return RemoteObjectStoreObject::newFromHeaders($name, $headers, $this->token, $url, $this->client);
     }
 
     /**
@@ -748,7 +748,7 @@ class Container implements \Countable, \IteratorAggregate
      * @param string $marker The name of the object to start with. The query will
      *                       begin with the next object AFTER this one.
      *
-     * @return array List of RemoteObject or Subdir instances.
+     * @return array List of RemoteObjectStoreObject or Subdir instances.
      */
     public function objects($limit = null, $marker = null)
     {
@@ -758,7 +758,7 @@ class Container implements \Countable, \IteratorAggregate
     /**
      * Retrieve a list of Objects with the given prefix.
      *
-     * Object Storage containers support directory-like organization. To
+     * ObjectStoreObject Storage containers support directory-like organization. To
      * get a list of items inside of a particular "subdirectory", provide
      * the directory name as a "prefix". This will return only objects
      * that begin with that prefix.
@@ -772,12 +772,12 @@ class Container implements \Countable, \IteratorAggregate
      * files on the remote object storage.
      *
      * When a prefix is used, object storage will begin to return not just
-     * Object instsances, but also Subdir instances. A Subdir is simply a
+     * ObjectStoreObject instsances, but also Subdir instances. A Subdir is simply a
      * container for a "path name".
      *
      * Delimiters
      *
-     * Object Storage (OpenStack Swift) does not have a native concept of
+     * ObjectStoreObject Storage (OpenStack Swift) does not have a native concept of
      * files and directories when it comes to paths. Instead, it merely
      * represents them and simulates their behavior under specific
      * circumstances.
@@ -793,7 +793,7 @@ class Container implements \Countable, \IteratorAggregate
      * `/` will not allow you to query `foo/bar` and get the contents of
      * `foo:bar`.
      *
-     * Setting $delimiter will tell the Object Storage server which
+     * Setting $delimiter will tell the ObjectStoreObject Storage server which
      * character to parse the filenames on. This means that if you use
      * delimiters other than '/', you need to be very consistent with your
      * usage or else you may get surprising results.
@@ -806,7 +806,7 @@ class Container implements \Countable, \IteratorAggregate
      * @param string $marker    The name of the object to start with. The query will
      *                          begin with the next object AFTER this one.
      *
-     * @return array List of RemoteObject or Subdir instances.
+     * @return array List of RemoteObjectStoreObject or Subdir instances.
      */
     public function objectsWithPrefix($prefix, $delimiter = '/', $limit = null, $marker = null)
     {
@@ -830,12 +830,12 @@ class Container implements \Countable, \IteratorAggregate
      * Typically, it is 0 bytes long.
      *
      *     <?php
-     *     $dir = new Object('a/b/c', '');
+     *     $dir = new ObjectStoreObject('a/b/c', '');
      *     $container->save($dir);
      *     ?>
      *
      * Using objectsByPath() with directory markers will return a list of
-     * Object instances, some of which are regular files, and some of
+     * ObjectStoreObject instances, some of which are regular files, and some of
      * which are just empty directory marker files. When creating
      * directory markers, you may wish to set metadata or content-type
      * information indicating that they are directory markers.
@@ -929,7 +929,7 @@ class Container implements \Countable, \IteratorAggregate
 
         // Update size and count.
         $this->bytes = $response->getHeader('X-Container-Bytes-Used', 0);
-        $this->count = $response->getHeader('X-Container-Object-Count', 0);
+        $this->count = $response->getHeader('X-Container-ObjectStoreObject-Count', 0);
 
         // Get metadata.
         $prefix = Container::CONTAINER_METADATA_HEADER_PREFIX;
@@ -970,7 +970,7 @@ class Container implements \Countable, \IteratorAggregate
 
         $json = $response->json();
 
-        // Turn the array into a list of RemoteObject instances.
+        // Turn the array into a list of RemoteObjectStoreObject instances.
         $list = [];
         foreach ($json as $item) {
             if (!empty($item['subdir'])) {
@@ -980,7 +980,7 @@ class Container implements \Countable, \IteratorAggregate
             } else {
                 //$url = $this->url . '/' . rawurlencode($item['name']);
                 $url = self::objectUrl($this->url, $item['name']);
-                $list[] = RemoteObject::newFromJSON($item, $this->token, $url, $this->client);
+                $list[] = RemoteObjectStoreObject::newFromJSON($item, $this->token, $url, $this->client);
             }
         }
 

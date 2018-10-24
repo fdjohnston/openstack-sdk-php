@@ -19,8 +19,8 @@
 
 namespace OpenStack\Tests\ObjectStore\v1\Resource;
 
-use \OpenStack\ObjectStore\v1\Resource\RemoteObject;
-use \OpenStack\ObjectStore\v1\Resource\Object;
+use \OpenStack\ObjectStore\v1\Resource\RemoteObjectStoreObject;
+use \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject;
 use \OpenStack\ObjectStore\v1\Resource\Container;
 
 class RemoteObjectTest extends \OpenStack\Tests\TestCase
@@ -40,7 +40,7 @@ class RemoteObjectTest extends \OpenStack\Tests\TestCase
     {
         $container = $this->containerFixture();
 
-        $object = new Object(self::FNAME, self::FCONTENT, self::FTYPE);
+        $object = new ObjectStoreObject(self::FNAME, self::FCONTENT, self::FTYPE);
         $object->setMetadata([self::FMETA_NAME => self::FMETA_VALUE]);
         $object->setDisposition(self::FDISPOSITION);
         $object->setEncoding(self::FENCODING);
@@ -66,7 +66,7 @@ class RemoteObjectTest extends \OpenStack\Tests\TestCase
 
         $obj = $container->proxyObject(self::FNAME);
 
-        $this->assertInstanceOf('\OpenStack\ObjectStore\v1\Resource\RemoteObject', $obj);
+        $this->assertInstanceOf('\OpenStack\ObjectStore\v1\Resource\RemoteObjectStoreObject', $obj);
 
         return $obj;
     }

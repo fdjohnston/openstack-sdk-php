@@ -19,7 +19,7 @@
 
 namespace OpenStack\Tests\ObjectStore\v1\Resource;
 
-use \OpenStack\ObjectStore\v1\Resource\Object;
+use \OpenStack\ObjectStore\v1\Resource\ObjectStoreObject;
 use \OpenStack\ObjectStore\v1\Resource\ACL;
 
 class ObjectStorageTest extends \OpenStack\Tests\TestCase
@@ -212,7 +212,7 @@ class ObjectStorageTest extends \OpenStack\Tests\TestCase
         $store->createContainer($testCollection);
 
         $container = $store->container($testCollection);
-        $container->save(new Object('test', 'test', 'text/plain'));
+        $container->save(new ObjectStoreObject('test', 'test', 'text/plain'));
 
         try {
             $ret = $store->deleteContainer($testCollection);
