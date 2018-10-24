@@ -320,6 +320,12 @@ class StreamWrapper
     protected $dirIndex = 0;
     protected $dirPrefix = '';
 
+	public function mkdir($uri, $mode, $options)
+	{
+		return false;
+
+	}
+
     /**
      * Close a directory.
      *
@@ -606,7 +612,9 @@ class StreamWrapper
         // Force-clear the memory hogs.
         unset($this->obj);
 
-        fclose($this->objStream);
+		if (get_resource_type($this->objStream) === 'stream'){
+        	fclose($this->objStream);
+		}
     }
 
     /**
@@ -670,7 +678,9 @@ class StreamWrapper
             rewind($this->objStream);
             $this->container->save($this->obj, $this->objStream);
 
-            fseek($this->objStream, SEEK_SET, $position);
+            if (get_resource_type($this->objStream) === 'stream'){
+            	fseek($this->objStream, SEEK_SET, $position);
+			}
 
         }
         $this->isDirty = false;
