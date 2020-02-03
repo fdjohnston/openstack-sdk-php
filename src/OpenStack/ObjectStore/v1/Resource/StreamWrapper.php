@@ -1172,7 +1172,7 @@ class StreamWrapper
      */
     public function serviceCatalog()
     {
-        return self::$serviceCatalogCache[$this->token()];
+        return Bootstrap::$serviceCatalogCache[$this->token()];
     }
 
     /**
@@ -1439,13 +1439,13 @@ class StreamWrapper
         $tenantId = $this->cxt('tenantid');
         $tenantName = $this->cxt('tenantname');
         $authUrl = $this->cxt('endpoint');
-        $endpoint = $this->cxt('swift_endpoint');
+        $endpoint = $this->cxt('swift.endpoint');
         $client = $this->cxt('transport_client', null);
 
         $serviceCatalog = null;
 
-        if (!empty($token) && isset(self::$serviceCatalogCache[$token])) {
-            $serviceCatalog = self::$serviceCatalogCache[$token];
+        if (!empty($token) && isset(Bootstrap::$serviceCatalogCache[$token])) {
+            $serviceCatalog = Bootstrap::$serviceCatalogCache[$token];
         }
 
         // FIXME: If a token is invalidated, we should try to re-authenticate.
@@ -1466,7 +1466,7 @@ class StreamWrapper
             // Update token and service catalog. The old pair may be out of date.
             $token = $ident->token();
             $serviceCatalog = $ident->serviceCatalog();
-            self::$serviceCatalogCache[$token] = $serviceCatalog;
+            Bootstrap::$serviceCatalogCache[$token] = $serviceCatalog;
 
             $region = $this->cxt('openstack.swift.region');
 
@@ -1497,7 +1497,7 @@ class StreamWrapper
             throw new \OpenStack\Common\Exception('Username/password must be provided.');
         }
         // Cache the service catalog.
-        self::$serviceCatalogCache[$token] = $ident->serviceCatalog();
+        Bootstrap::$serviceCatalogCache[$token] = $ident->serviceCatalog();
 
         return $ident;
     }

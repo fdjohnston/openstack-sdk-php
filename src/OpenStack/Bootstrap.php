@@ -97,6 +97,8 @@ class Bootstrap
      * @var \OpenStack\Common\Transport\ClientInterface A transport client for requests.
      */
     public static $transport = null;
+    
+    public static $serviceCatalogCache = [];
 
     /**
      * Register stream wrappers for OpenStack.
@@ -224,6 +226,11 @@ class Bootstrap
     {
         return isset(self::$config[$name]);
     }
+	
+	public static function setConfig($name, $value)
+	{
+		self::$config[$name] = $value;
+	}
 
     /**
      * Get a \OpenStack\Identity\v2\IdentityService object from the bootstrap config.

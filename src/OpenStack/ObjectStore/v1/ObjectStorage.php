@@ -19,6 +19,7 @@
 
 namespace OpenStack\ObjectStore\v1;
 
+use OpenStack\Bootstrap;
 use OpenStack\Common\Exception;
 use OpenStack\Common\Transport\ClientInterface;
 use OpenStack\Common\Transport\Exception\ConflictException;
@@ -124,9 +125,12 @@ class ObjectStorage
         for ($i = 0; $i < $c; ++$i) {
             if ($catalog[$i]['type'] == self::SERVICE_TYPE) {
                 foreach ($catalog[$i]['endpoints'] as $endpoint) {
-                    if (isset($endpoint['publicURL']) && $endpoint['region'] == $region) {
-                        return new ObjectStorage($authToken, $endpoint['publicURL'], $client);
-                    }
+                	if (isset($endpoint['interface']) && $endpoint['interface'] === 'public'){
+						if (isset($endpoint['url']) && $endpoint['region'] == $region) {
+							Bootstrap::setConfig('swift.endpoint', $endpoint['url']);
+							return new ObjectStorage($authToken, $endpoint['url'], $client);
+						}
+					}
                 }
             }
         }

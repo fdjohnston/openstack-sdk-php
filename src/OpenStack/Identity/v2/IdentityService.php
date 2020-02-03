@@ -18,6 +18,7 @@
  */
 
 namespace OpenStack\Identity\v2;
+use OpenStack\Bootstrap;
 use OpenStack\Common\Transport\ClientInterface;
 use OpenStack\Common\Transport\Guzzle\GuzzleAdapter;
 
@@ -270,10 +271,12 @@ class IdentityService
      */
     public function authenticate(array $ops)
     {
-        $url = $this->url() . '/tokens';
-        $envelope = [
-            'auth' => $ops,
-        ];
+        $url = $this->url() . '/auth/tokens';
+        $envelope = array(
+            'auth' => array(
+            	'identity'=>$ops
+			),
+		);
 
         $body = json_encode($envelope);
 
@@ -284,7 +287,6 @@ class IdentityService
         ];
 
         $response = $this->client->post($url, $body, ['headers' => $headers]);
-
         $this->handleResponse($response);
 
         return $this->token();
@@ -323,9 +325,15 @@ class IdentityService
     public function authenticateAsUser($username, $password, $tenantId = null, $tenantName = null)
     {
         $ops = [
-            'passwordCredentials' => [
-                'username' => $username,
-                'password' => $password,
+			"methods"=> [
+				"password"
+			],
+            'password' => [
+            	'user'	=> [
+            		'domain'=>['id'=>'default'],
+					'name' => $username,
+					'password' => $password,
+				]
             ]
         ];
 
@@ -433,12 +441,12 @@ class IdentityService
     {
         $details = $this->tokenDetails();
 
-        if (empty($details['expires'])) {
+        if (empty($details['expires_at'])) {
             return true;
         }
 
         $currentDateTime = new \DateTime('now');
-        $expireDateTime = new \DateTime($details['expires']);
+        $expireDateTime = new \DateTime($details['expires_at']);
 
         return $currentDateTime > $expireDateTime;
     }
@@ -730,10 +738,13 @@ class IdentityService
     protected function handleResponse($response)
     {
         $json = $response->json();
-
-        $this->tokenDetails = $json['access']['token'];
-        $this->userDetails = $json['access']['user'];
-        $this->serviceCatalog = $json['access']['serviceCatalog'];
+        $headers = $response->getHeaders();
+	
+		$json['token']['id'] = $headers['X-Subject-Token'][0];
+		Bootstrap::setConfig('token', $headers['X-Subject-Token'][0]);
+        $this->tokenDetails = $json['token'];
+        $this->userDetails = array(); //$json['access']['user'];
+        $this->serviceCatalog = $json['token']['catalog'];
 
         return $this;
     }
